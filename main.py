@@ -13,16 +13,32 @@ FONT_SIZE = 35
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
-
+reps = 0
+sec_in_one_min = 60
 # ---------------------------- TIMER RESET ------------------------------- #
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
-    count_down(2 * 60)
+    global reps
+    reps += 1
+    global sec_in_one_min
+    work_sec = round(WORK_MIN * sec_in_one_min)
+    short_break_sec = round(SHORT_BREAK_MIN * sec_in_one_min)
+    long_break_sec = round(LONG_BREAK_MIN * sec_in_one_min)
+
+    if reps % 8 == 0:
+        count_down(long_break_sec)
+        timer_label.config(text="Long Break", foreground=RED)
+    elif reps % 2 == 0:
+        count_down(short_break_sec)
+        timer_label.config(text="Short Break", foreground=PINK)
+    else:
+        count_down(work_sec)
+        timer_label.config(text="Work Time", foreground=GREEN)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
-    sec_in_one_min = 60
+    global sec_in_one_min
     count_min = math.floor(count / sec_in_one_min)
     count_sec = count % sec_in_one_min
     if count_sec < 10:
@@ -31,7 +47,8 @@ def count_down(count):
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
         window.after(1000, count_down, count-1)
-
+    else:
+        start_timer()
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
