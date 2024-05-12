@@ -18,6 +18,8 @@ sec_in_one_min = 60
 timer = None
 # ---------------------------- TIMER RESET ------------------------------- #
 def reset_timer():
+    start_button.config(state="normal")
+    reset_button.config(state="disabled")
     global reps
     reps = 0
     window.after_cancel(timer)
@@ -27,6 +29,8 @@ def reset_timer():
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
+    start_button.config(state="disabled")
+    reset_button.config(state="normal")
     global reps
     reps += 1
     global sec_in_one_min
@@ -43,6 +47,9 @@ def start_timer():
     else:
         count_down(work_sec)
         timer_label.config(text="Work Time", foreground=GREEN)
+
+    window.attributes('-topmost', 1)
+    window.attributes('-topmost', 0)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
@@ -80,11 +87,13 @@ timer_label = Label(text="Timer", font=(FONT_NAME, TEXT_SIZE, TEXT_TYPEFACE))
 timer_label.grid(column=1, row=0)
 timer_label.config(background=YELLOW, foreground=GREEN)
 
-start_button = Button(text="Start", font=("Arial", 12, "bold"), highlightthickness=0, command=start_timer)
+start_button = Button(text="Start", font=("Arial", 12, "bold"),
+                      highlightthickness=0, command=start_timer, state="normal")
 start_button.grid(column=0, row=2)
 start_button.config(background=YELLOW, foreground=BUTTON_FG)
 
-reset_button = Button(text="Reset", font=("Arial", 12, "bold"), highlightthickness=0, command=reset_timer)
+reset_button = Button(text="Reset", font=("Arial", 12, "bold"),
+                      highlightthickness=0, command=reset_timer, state="disabled")
 reset_button.grid(column=2, row=2)
 reset_button.config(background=YELLOW, foreground=BUTTON_FG)
 
