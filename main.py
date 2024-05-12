@@ -10,12 +10,20 @@ TEXT_TYPEFACE = "bold"
 TEXT_SIZE = 24
 BUTTON_FG = "black"
 FONT_SIZE = 35
-WORK_MIN = 25
-SHORT_BREAK_MIN = 5
-LONG_BREAK_MIN = 20
+WORK_MIN = 0.25
+SHORT_BREAK_MIN = 0.3
+LONG_BREAK_MIN = 1
 reps = 0
 sec_in_one_min = 60
+timer = None
 # ---------------------------- TIMER RESET ------------------------------- #
+def reset_timer():
+    global reps
+    reps = 0
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text="00:00")
+    timer_label.config(text="Timer")
+    check_marks_label.config(text="")
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
@@ -38,6 +46,7 @@ def start_timer():
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
+    global timer
     global sec_in_one_min
     count_min = math.floor(count / sec_in_one_min)
     count_sec = count % sec_in_one_min
@@ -46,17 +55,20 @@ def count_down(count):
 
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
-        window.after(1000, count_down, count-1)
+        timer = window.after(1000, count_down, count - 1)
     else:
         start_timer()
+        marks = ""
+        work_sessions = math.floor(reps/2)
+        for _ in range(work_sessions):
+            marks += "✔"
+        check_marks_label.config(text=marks)
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Pomodoro")
 window.config(padx=100, pady=50, bg=YELLOW)
 
-fg = GREEN
-text = "✔"
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomato_image = PhotoImage(file="tomato.png")
 canvas.create_image(100, 112, image=tomato_image)
@@ -68,16 +80,15 @@ timer_label = Label(text="Timer", font=(FONT_NAME, TEXT_SIZE, TEXT_TYPEFACE))
 timer_label.grid(column=1, row=0)
 timer_label.config(background=YELLOW, foreground=GREEN)
 
-
 start_button = Button(text="Start", font=("Arial", 12, "bold"), highlightthickness=0, command=start_timer)
 start_button.grid(column=0, row=2)
 start_button.config(background=YELLOW, foreground=BUTTON_FG)
 
-reset_button = Button(text="Reset", font=("Arial", 12, "bold"), highlightthickness=0)
+reset_button = Button(text="Reset", font=("Arial", 12, "bold"), highlightthickness=0, command=reset_timer)
 reset_button.grid(column=2, row=2)
 reset_button.config(background=YELLOW, foreground=BUTTON_FG)
 
-check_marks_label = Label(text="✔", font=("Arial", 12, "bold"), highlightthickness=0)
+check_marks_label = Label(font=("Arial", 12, "bold"), highlightthickness=0)
 check_marks_label.grid(column=1, row=2)
 check_marks_label.config(background=YELLOW, foreground=GREEN)
 window.mainloop()
