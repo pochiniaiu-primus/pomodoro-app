@@ -1,5 +1,6 @@
 from tkinter import *
 import math
+
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -10,12 +11,14 @@ TEXT_TYPEFACE = "bold"
 TEXT_SIZE = 24
 BUTTON_FG = "black"
 FONT_SIZE = 35
-WORK_MIN = 0.25
-SHORT_BREAK_MIN = 0.3
-LONG_BREAK_MIN = 1
+WORK_MIN = 0.25  # 15 seconds for testing
+SHORT_BREAK_MIN = 0.3  # 18 seconds for testing
+LONG_BREAK_MIN = 1  # 60 seconds for testing
 reps = 0
 sec_in_one_min = 60
 timer = None
+
+
 # ---------------------------- TIMER RESET ------------------------------- #
 def reset_timer():
     start_button.config(state="normal")
@@ -26,6 +29,7 @@ def reset_timer():
     canvas.itemconfig(timer_text, text="00:00")
     timer_label.config(text="Timer")
     check_marks_label.config(text="")
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
@@ -51,6 +55,7 @@ def start_timer():
     window.attributes('-topmost', 1)
     window.attributes('-topmost', 0)
 
+
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
     global timer
@@ -66,10 +71,11 @@ def count_down(count):
     else:
         start_timer()
         marks = ""
-        work_sessions = math.floor(reps/2)
+        work_sessions = math.floor(reps / 2)
         for _ in range(work_sessions):
             marks += "✔"
         check_marks_label.config(text=marks)
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
